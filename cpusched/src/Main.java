@@ -5,20 +5,22 @@ import java.util.*;
 
 public class Main {
 
-    private static ArrayList<Job> jobs = new ArrayList<>();
-
+    // method that contains all the main functions of the program
     public static void main(String[] args) {
 
         final Scanner in = new Scanner(System.in);
 
-        int jobNo;
+        // array list that will contain all the jobs
+        ArrayList<Job> jobs = new ArrayList<>();
+
+        int jobNo = 0; // number of jobs to be defined by the user
 
         // get number of jobs
         System.out.print("Enter number of jobs: ");
         jobNo = in.nextInt();
 
         // create all new jobs
-        for(int i = 1; i <= jobNo; i++ ) {
+        for (int i = 1; i <= jobNo; i++) {
             double hr, mins, sec, bt; // at is arrival time and bt is burst time
             System.out.println("Job #" + i);
             System.out.println("Arrival Time");
@@ -30,44 +32,45 @@ public class Main {
             sec = in.nextDouble();
             System.out.print("Burst Time\nEnter minutes(BT): ");
             bt = in.nextDouble();
-            jobs.add( new Job(i, hr, mins, sec, bt));
-            System.out.println("Job #" + i + " added!"+
+            jobs.add(new Job(i, hr, mins, sec, bt));
+            System.out.println("Job #" + i + " added!" +
                     "\n-----------------------------\n");
         }
 
-        // iterate over all jobs to display initial values
-        System.out.println("Job #	Arrival Time	Burst Time");
+        System.out.println("Job #\tArrival Time\tBurst Time");
+
+        // iterates over all the jobs in the array list
         for (Job j : jobs) {
-            System.out.println(j.getNumber() + "	" + j.getHours() + ":" + j.getMins() + ":" + j.getSecs() +
-                    "	" + j.getBurstTime());
+            System.out.println(j.getNumber() + "\t" + j.getHours() + ":" + j.getMins() + ":" + j.getSecs() +
+                    "\t" + j.getBurstTime());
         }
 
+        // runs the FIFO method and throws the array list of jobs
+        FIFO(jobs);
+    }
 
-        System.out.println("\n\nJob#	AT	BT	ST	FT	WT");
+    // procedure that displays
+    private static void FIFO(ArrayList<Job> jobs) {
 
-        Job currentLowestJob = null;
-        Stack<Job> finishedJobs = new Stack<>();
-        finishedJobs.push(new Job(999, 0, 0, 0, 0));
+        double prevFinishTime = 0;
 
-        // iterates over all the jobs to determine final output
-        for (int i = jobNo; i > 0; i--) {
-            for (Job j : jobs) {
-                if (currentLowestJob != null) {
-                    if (finishedJobs.peek().getNumber() != currentLowestJob.getNumber()) {
-                        if (currentLowestJob.getArrivalTimeDec() > j.getArrivalTimeDec())
-                            currentLowestJob = j;
-                    }
-                }
-                else {
-                    currentLowestJob = j;
-                }
-            }
-            System.out.println(currentLowestJob.getNumber());
-            finishedJobs.push(currentLowestJob);
-            jobs.remove(currentLowestJob);
+        // sorts the 'jobs' array list in ascending order
+        Collections.sort(jobs);
+        System.out.println(jobs);
+
+        // displays table header
+        System.out.println("Job#\tArrival Time\tBurst Time\tStarting Time");
+
+        // iterates over all the jobs to for the FIFO
+        for(Job job: jobs) {
+
+            // displays the current job's status
+            System.out.println( job.getNumber()+"\t"+job.getArrivalTime()+"\t"+job.getBurstTime()+"\t"
+                    +(prevFinishTime==0? job.getArrivalTime():prevFinishTime) );
+
+            // sets up finish time
+            prevFinishTime += (prevFinishTime==0? job.getBurstTimeDec(1) + job.getArrivalTime()
+                    : job.getBurstTimeDec(1));
         }
-
     }
 }
-
-
