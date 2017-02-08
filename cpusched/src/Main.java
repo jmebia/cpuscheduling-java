@@ -146,7 +146,7 @@ public class Main {
     }
 
     // procedure that performs the Shortest Jump First scheduling algorithm simulation
-    private static void sjf() {
+    private static void sjf() throws NullPointerException {
         // array list that will contain all the jobs
         ArrayList<SJF> jobs = new ArrayList<>();
 
@@ -193,7 +193,30 @@ public class Main {
         // displays table header
         System.out.println("Job#\tArrival Time\tBurst Time\tStarting Time");
 
+        Job o = null;
+
         // finds the lowest arrival time first
+        for (Job job: jobs) {
+            if (o == null) o = job;
+            else if (o.getArrivalTime() > job.getArrivalTime()) o = job;
+        }
+
+        // displays the initial object values -------------
+        System.out.print( o.getNumber()+"\t"+o.getArrivalTime()+"\t"+o.getBurstTime()+"\t"
+                +(o.getArrivalTime() > prevFinishTime? o.getArrivalTime():prevFinishTime) + "\t");
+
+        // change the value of the finish time
+        prevFinishTime = (prevFinishTime < o.getArrivalTime()?
+                o.getBurstTimeDec() + o.getArrivalTime()
+                : prevFinishTime + o.getBurstTimeDec());
+
+        System.out.println(prevFinishTime);
+        //-------------------------------------------------
+
+        // remove o from jobs\
+        for(Job j : jobs) {
+            if (o.getNumber() == j.getNumber()) jobs.remove(j);
+        }
 
         // sorts the 'jobs' array list in ascending order
         Collections.sort(jobs);
