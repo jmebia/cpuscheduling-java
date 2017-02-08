@@ -3,7 +3,7 @@
  */
 
 // a template for all the jobs to be inputted
-class Job implements Comparable<Job> {
+class Job {
 
     private int jobNumber = 0;
 
@@ -70,16 +70,4 @@ class Job implements Comparable<Job> {
         return burstTime;
     }
 
-    // this method compares this object's arrival time to another given object's arrival time
-    // and will return -1 if this' arrival time is less than the arrival time of the other object
-    // and 1 if this' arrival time is greater than the other
-    @Override
-    public int compareTo(Job o) {
-        int retVal = -1;
-
-        if (this.getArrivalTime() > o.getArrivalTime())
-            retVal = 1;
-
-        return retVal;
-    }
 }

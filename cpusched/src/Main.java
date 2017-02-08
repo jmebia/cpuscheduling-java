@@ -5,15 +5,66 @@ import java.util.*;
 
 public class Main {
 
+    final static Scanner in = new Scanner(System.in);
+
     // method that contains all the main functions of the program
     public static void main(String[] args) {
 
-        final Scanner in = new Scanner(System.in);
+        // stores user input
+        int choice = 0;
+
+        do {
+
+            System.out.println("     _______.  ______  __    __   _______  _______   __    __   __       __  .__   __.   _______ \n" +
+                    "    /       | /      ||  |  |  | |   ____||       \\ |  |  |  | |  |     |  | |  \\ |  |  /  _____|\n" +
+                    "   |   (----`|  ,----'|  |__|  | |  |__   |  .--.  ||  |  |  | |  |     |  | |   \\|  | |  |  __  \n" +
+                    "    \\   \\    |  |     |   __   | |   __|  |  |  |  ||  |  |  | |  |     |  | |  . `  | |  | |_ | \n" +
+                    ".----)   |   |  `----.|  |  |  | |  |____ |  '--'  ||  `--'  | |  `----.|  | |  |\\   | |  |__| | \n" +
+                    "|_______/     \\______||__|  |__| |_______||_______/  \\______/  |_______||__| |__| \\__|  \\______| ");
+
+            System.out.print("[1] First In First Out\n[2] Shortest Jump First\n[0] Exit" +
+                    "\nChoice: ");
+
+            // sets the user's input to the 'choice' variable
+            choice = in.nextInt();
+
+            switch (choice) {
+
+                case 1:
+                    // runs the FIFO method
+                    fifo();
+                    break;
+
+                case 2:
+                    // runs the SJF method
+                    sjf();
+            }
+        } while (choice != 0);
+
+    }
+
+    // procedure that performs the First In First Out scheduling algorithm simulation
+    private static void fifo() {
 
         // array list that will contain all the jobs
-        ArrayList<Job> jobs = new ArrayList<>();
+        ArrayList<FIFO> jobs = new ArrayList<>();
 
-        int jobNo = 0; // number of jobs to be defined by the user
+        // number of jobs to be defined by the user
+        int jobNo = 0;
+
+        // stores the last checked job's finnish time
+        double prevFinishTime = 0;
+
+        System.out.println("\n" +
+                "\n" +
+                "     _______  __   _______   ______   \n" +
+                "    |   ____||  | |   ____| /  __  \\  \n" +
+                "    |  |__   |  | |  |__   |  |  |  | \n" +
+                "    |   __|  |  | |   __|  |  |  |  | \n" +
+                "    |  |     |  | |  |     |  `--'  | \n" +
+                "    |__|     |__| |__|      \\______/  \n" +
+                "                                      \n" +
+                "\n");
 
         // get number of jobs
         System.out.print("Enter number of jobs: ");
@@ -32,31 +83,24 @@ public class Main {
             sec = in.nextDouble();
             System.out.print("Burst Time\nEnter minutes(BT): ");
             bt = in.nextDouble();
-            jobs.add(new Job(i, hr, mins, sec, bt));
+            jobs.add(new FIFO(i, hr, mins, sec, bt));
             System.out.println("Job #" + i + " added!" +
                     "\n-----------------------------\n");
         }
 
+        // displays table column titles
         System.out.println("Job #\tArrival Time\tBurst Time");
 
         // iterates over all the jobs in the array list
-        for (Job j : jobs) {
+        for (FIFO j : jobs) {
             System.out.println(j.getNumber() + "\t" + j.getHours() + ":" + j.getMins() + ":" + j.getSecs() +
                     "\t" + j.getBurstTime());
         }
 
-        // runs the FIFO method and throws the array list of jobs
-        FIFO(jobs);
-    }
-
-    // procedure that displays
-    private static void FIFO(ArrayList<Job> jobs) {
-
-        double prevFinishTime = 0;
+        System.out.println("\n");
 
         // sorts the 'jobs' array list in ascending order
         Collections.sort(jobs);
-        System.out.println(jobs);
 
         // displays table header
         System.out.println("Job#\tArrival Time\tBurst Time\tStarting Time");
@@ -72,5 +116,13 @@ public class Main {
             prevFinishTime += (prevFinishTime==0? job.getBurstTimeDec(1) + job.getArrivalTime()
                     : job.getBurstTimeDec(1));
         }
+
+        System.out.println("\n");
+
+    }
+
+    // procedure that performs the Shortest Jump First scheduling algorithm simulation
+    private static void sjf() {
+        // code here...
     }
 }
