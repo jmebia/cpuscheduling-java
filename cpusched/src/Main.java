@@ -31,13 +31,40 @@ public class Main {
             switch (choice) {
 
                 case 1:
+
+                    // displays title
+                    System.out.println("\n" +
+                            "\n" +
+                            "     _______  __   _______   ______   \n" +
+                            "    |   ____||  | |   ____| /  __  \\  \n" +
+                            "    |  |__   |  | |  |__   |  |  |  | \n" +
+                            "    |   __|  |  | |   __|  |  |  |  | \n" +
+                            "    |  |     |  | |  |     |  `--'  | \n" +
+                            "    |__|     |__| |__|      \\______/  \n" +
+                            "                                      \n" +
+                            "\n");
+
                     // runs the FIFO method
                     fifo();
                     break;
 
                 case 2:
+
+                    // displays title
+                    System.out.println("\n" +
+                            "\n" +
+                            "         _______.       __   _______ \n" +
+                            "        /       |      |  | |   ____|\n" +
+                            "       |   (----`      |  | |  |__   \n" +
+                            "        \\   \\    .--.  |  | |   __|  \n" +
+                            "    .----)   |   |  `--'  | |  |     \n" +
+                            "    |_______/     \\______/  |__|     \n" +
+                            "                                     \n" +
+                            "\n");
+
                     // runs the SJF method
                     sjf();
+                    break;
             }
         } while (choice != 0);
 
@@ -54,17 +81,6 @@ public class Main {
 
         // stores the last checked job's finnish time
         double prevFinishTime = 0;
-
-        System.out.println("\n" +
-                "\n" +
-                "     _______  __   _______   ______   \n" +
-                "    |   ____||  | |   ____| /  __  \\  \n" +
-                "    |  |__   |  | |  |__   |  |  |  | \n" +
-                "    |   __|  |  | |   __|  |  |  |  | \n" +
-                "    |  |     |  | |  |     |  `--'  | \n" +
-                "    |__|     |__| |__|      \\______/  \n" +
-                "                                      \n" +
-                "\n");
 
         // get number of jobs
         System.out.print("Enter number of jobs: ");
@@ -97,32 +113,110 @@ public class Main {
                     "\t" + j.getBurstTime());
         }
 
+        // creates a new line for readability
         System.out.println("\n");
 
         // sorts the 'jobs' array list in ascending order
         Collections.sort(jobs);
 
         // displays table header
-        System.out.println("Job#\tArrival Time\tBurst Time\tStarting Time");
+        System.out.println("Job#\tArrival Time\tBurst Time\tStarting Time\tFinish Time");
 
         // iterates over all the jobs to for the FIFO
         for(Job job: jobs) {
 
-            // displays the current job's status
-            System.out.println( job.getNumber()+"\t"+job.getArrivalTime()+"\t"+job.getBurstTime()+"\t"
-                    +(prevFinishTime==0? job.getArrivalTime():prevFinishTime) );
+            // displays the current job's status; checks if the prevArrivalTime
+            // is greater than the last arrival time, then it displays the
+            // current arrival/finish time based on the result
+            System.out.print( job.getNumber()+"\t"+job.getArrivalTime()+"\t"+job.getBurstTime()+"\t"
+                    +(job.getArrivalTime() > prevFinishTime? job.getArrivalTime():prevFinishTime)
+                    + "\t");
 
-            // sets up finish time
-            prevFinishTime += (prevFinishTime==0? job.getBurstTimeDec(1) + job.getArrivalTime()
-                    : job.getBurstTimeDec(1));
+            // change the value of the finish time
+            prevFinishTime = (prevFinishTime < job.getArrivalTime()?
+                    job.getBurstTimeDec() + job.getArrivalTime()
+                    : prevFinishTime + job.getBurstTimeDec());
+
+            System.out.println(prevFinishTime);
         }
 
+        // creates a new line for readability
         System.out.println("\n");
 
     }
 
     // procedure that performs the Shortest Jump First scheduling algorithm simulation
     private static void sjf() {
-        // code here...
+        // array list that will contain all the jobs
+        ArrayList<SJF> jobs = new ArrayList<>();
+
+        // number of jobs to be defined by the user
+        int jobNo = 0;
+
+        // stores the last checked job's finnish time
+        double prevFinishTime = 0;
+
+        // get number of jobs
+        System.out.print("Enter number of jobs: ");
+        jobNo = in.nextInt();
+
+        // create all new jobs
+        for (int i = 1; i <= jobNo; i++) {
+            double hr, mins, sec, bt; // at is arrival time and bt is burst time
+            System.out.println("Job #" + i);
+            System.out.println("Arrival Time");
+            System.out.print("Enter hours(AT): ");
+            hr = in.nextDouble();
+            System.out.print("Enter minutes(AT): ");
+            mins = in.nextDouble();
+            System.out.print("Enter seconds(AT): ");
+            sec = in.nextDouble();
+            System.out.print("Burst Time\nEnter minutes(BT): ");
+            bt = in.nextDouble();
+            jobs.add(new SJF(i, hr, mins, sec, bt));
+            System.out.println("Job #" + i + " added!" +
+                    "\n-----------------------------\n");
+        }
+
+        // displays table column titles
+        System.out.println("Job #\tArrival Time\tBurst Time");
+
+        // iterates over all the jobs in the array list
+        for (SJF j : jobs) {
+            System.out.println(j.getNumber() + "\t" + j.getHours() + ":" + j.getMins() + ":" + j.getSecs() +
+                    "\t" + j.getBurstTime());
+        }
+
+        // creates a new line for readability
+        System.out.println("\n");
+
+        // displays table header
+        System.out.println("Job#\tArrival Time\tBurst Time\tStarting Time");
+
+        // finds the lowest arrival time first
+
+        // sorts the 'jobs' array list in ascending order
+        Collections.sort(jobs);
+
+        // iterates over all the jobs for the lowest burst time
+        for(Job job: jobs) {
+
+            // displays the current job's status; checks if the prevArrivalTime
+            // is greater than the last arrival time, then it displays the
+            // current arrival/finish time based on the result
+            System.out.print( job.getNumber()+"\t"+job.getArrivalTime()+"\t"+job.getBurstTime()+"\t"
+                    +(job.getArrivalTime() > prevFinishTime? job.getArrivalTime():prevFinishTime) + "\t");
+
+            // change the value of the finish time
+            prevFinishTime = (prevFinishTime < job.getArrivalTime()?
+                    job.getBurstTimeDec() + job.getArrivalTime()
+                    : prevFinishTime + job.getBurstTimeDec());
+
+            System.out.println(prevFinishTime);
+        }
+
+        // creates a new line for readability
+        System.out.println("\n");
+
     }
 }

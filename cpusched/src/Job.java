@@ -47,22 +47,8 @@ class Job {
     }
 
     // 0 is hours; 1 is minutes; 2 is seconds
-    double getBurstTimeDec(int choice) {
-        double retval = 0;
-        switch(choice) {
-            case 0:
-                retval = hr;
-                break;
-            case 1:
-                retval = mins / 60;
-                break;
-            case 2:
-                retval = sec / 3600;
-                break;
-            default:
-                System.out.print("Invalid input!");
-        }
-        return retval;
+    double getBurstTimeDec() {
+        return burstTime / 60;
     }
 
     // returns burst time
